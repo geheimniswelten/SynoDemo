@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+target="${SYNOPKG_PKGDEST:-/var/packages/h5uSynoDemo/target}"
+exec "$target/bin/synodemo" init

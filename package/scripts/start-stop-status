@@ -1,0 +1,44 @@
+#!/bin/sh
+set -eu
+
+target="${SYNOPKG_PKGDEST:-/var/packages/h5uSynoDemo/target}"
+data="${SYNOPKG_PKGVAR:-/var/packages/h5uSynoDemo/var}"
+binary="$target/bin/synodemo"
+SYNODEMO_VAR="$data/private"
+# Keep the package pathname independent of the selected DSM volume.
+SYNODEMO_SOCKET="/var/packages/h5uSynoDemo/target/run/backend.sock"
+export SYNODEMO_VAR SYNODEMO_SOCKET
+umask 077
+
+case "${1:-}" in
+    start)
+        "$binary" init
+        if "$binary" status >/dev/null 2>&1; then
+            exit 0
+        fi
+        "$binary" --serve >> "$SYNODEMO_VAR/service.log" 2>&1 </dev/null &
+        count=0
+        while [ "$count" -lt 15 ]; do
+            if "$binary" status >/dev/null 2>&1; then
+                exit 0
+            fi
+            count=$((count + 1))
+            sleep 1
+        done
+        case "${SYNOPKG_DSM_LANGUAGE:-enu}" in
+            ger|de|de-*) echo "SynoDemo konnte nicht gestartet werden. Details: $SYNODEMO_VAR/service.log" >&2 ;;
+            *) echo "SynoDemo failed to start. See $SYNODEMO_VAR/service.log" >&2 ;;
+        esac
+        exit 1
+        ;;
+    stop|status)
+        exec "$binary" "$1"
+        ;;
+    prestart|prestop)
+        exit 0
+        ;;
+    *)
+        echo "Usage: $0 start|stop|status" >&2
+        exit 1
+        ;;
+esac

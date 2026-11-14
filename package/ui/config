@@ -1,0 +1,22 @@
+{
+  "SynoDemo.js": {
+    "SYNO.SDS.h5uSynoDemo.Application": {
+      "type": "app",
+      "title": "SynoDemo",
+      "appWindow": "SYNO.SDS.h5uSynoDemo.MainWindow",
+      "icon": "images/icon_{0}.png",
+      "allowMultiInstance": false,
+      "allowStandalone": false,
+      "allowSharing": false,
+      "allUsers": false,
+      "grantPrivilege": "local",
+      "advanceGrantPrivilege": true,
+      "depend": ["SYNO.SDS.h5uSynoDemo.MainWindow"]
+    },
+    "SYNO.SDS.h5uSynoDemo.MainWindow": {
+      "type": "lib",
+      "title": "SynoDemo",
+      "icon": "images/icon_{0}.png"
+    }
+  }
+}
